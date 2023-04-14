@@ -1,3 +1,5 @@
+const { convertToJsonSchema } = require("./helpers/helpers");
+
 const app = async ({ client, keyspace }, { exit = false } = {}) => {
   console.info("Start connection to DB");
 
@@ -9,13 +11,27 @@ const app = async ({ client, keyspace }, { exit = false } = {}) => {
     console.error("Connection Error:", err);
   }
 
+  console.info("Request DB schema");
+
   const { rows: keyspaceColumns } = await client.execute(`
   SELECT table_name AS "tableName", column_name AS "columnName", type
     FROM system_schema.columns
         WHERE keyspace_name = '${keyspace}';
 `);
 
+  console.info("Process DB schema to JSON");
+
+  const jsonSchema = convertToJsonSchema({
+    columns: keyspaceColumns,
+  });
+
+  console.info("Converting finish");
+  console.info("JSON schema of DB:");
+  console.info(jsonSchema);
+
   if (exit) {
+    console.info("Exit");
+
     process.exit();
   }
 };
