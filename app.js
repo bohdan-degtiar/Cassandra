@@ -9,6 +9,12 @@ const app = async ({ client, keyspace }, { exit = false } = {}) => {
     console.error("Connection Error:", err);
   }
 
+  const { rows: keyspaceColumns } = await client.execute(`
+  SELECT table_name AS "tableName", column_name AS "columnName", type
+    FROM system_schema.columns
+        WHERE keyspace_name = '${keyspace}';
+`);
+
   if (exit) {
     process.exit();
   }
