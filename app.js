@@ -1,6 +1,8 @@
+const fs = require("fs");
+
 const { convertToJsonSchema } = require("./helpers/helpers");
 
-const app = async ({ client, keyspace }, { exit = false } = {}) => {
+const app = async ({ client, keyspace }, { exit = false, fileName } = {}) => {
   console.info("Start connection to DB");
 
   try {
@@ -26,14 +28,22 @@ const app = async ({ client, keyspace }, { exit = false } = {}) => {
   });
 
   console.info("Converting finish");
-  console.info("JSON schema of DB:");
-  console.info(jsonSchema);
 
-  if (exit) {
-    console.info("Exit");
+  console.info("Start saving result file");
 
-    process.exit();
-  }
+  fs.writeFile(fileName, jsonSchema, "utf8", (err) => {
+    if (err) {
+      console.error("Error during write result file");
+    }
+
+    console.info("Result file saved");
+
+    if (exit) {
+      console.info("Exit");
+
+      process.exit();
+    }
+  });
 };
 
 module.exports = { app };
