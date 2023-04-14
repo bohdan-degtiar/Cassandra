@@ -1,6 +1,7 @@
 const { Client } = require("cassandra-driver");
 
 const { config } = require("./config");
+const { app } = require("./app");
 
 const { localDataCenter, keyspace, host, port } = config;
 
@@ -14,13 +15,4 @@ const client = new Client({
   keyspace,
 });
 
-console.info("Start connection to DB");
-
-client
-  .connect()
-  .then(() => {
-    console.info("Connected to DB");
-  })
-  .catch((err) => {
-    console.log("Connection Error:", err);
-  });
+app({ client, keyspace }, { exit: true });

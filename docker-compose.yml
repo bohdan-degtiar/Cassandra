@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: "cassandra"
+    restart: on-failure
+    environment:
+      - CASSANDRA_CLUSTER_NAME=cassandra
+    ports:
+      - "9042:9042"
+# docker-compose -f docker-compose.yml up --build
