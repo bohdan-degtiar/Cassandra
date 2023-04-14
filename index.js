@@ -3,7 +3,7 @@ const { Client } = require("cassandra-driver");
 const { config } = require("./config");
 const { app } = require("./app");
 
-const { localDataCenter, keyspace, host, port } = config;
+const { localDataCenter, keyspace, host, port, fileName } = config;
 
 const contactPoint = `${host}:${port}`;
 
@@ -15,4 +15,4 @@ const client = new Client({
   keyspace,
 });
 
-app({ client, keyspace }, { exit: true });
+app({ client, keyspace }, { exit: true, fileName });
